@@ -1,6 +1,6 @@
 {
   "version": "2.0",
-  "app_name": "lambda_pdf_deriv",
+  "app_name": "chalice-s3deriv",
   "automatic_layer": true,
   "xray": false,
   "environment_variables": {
@@ -9,14 +9,15 @@
   },
   "stages": {
     "dev": {
-      "lambda_memory_size": 2048,
+      "lambda_memory_size": 4096,
       "tags": {
-        "Unit": "Informatics"
+        "Unit": "DevOps"
       },
       "environment_variables": {
         "SQS_QUEUE_DERIV": "infx_deriv_gen",
         "SQS_QUEUE_PDF": "infx_pdf_gen",
-        "S3_BUCKET": "ul-bagit"
+        "S3_BUCKET": "ul-bagit",
+        "LAMBDA_MAX_MEMORY_FOR_DERIV":"4294967296"
       },
       "api_gateway_stage": "api",
       "lambda_functions": {
@@ -24,19 +25,22 @@
           "tags": {
             "Product": "Derivative Generation"
           },
-          "lambda_memory_size": 2048
+	  "environment_variables": {
+            "LAMBDA_MAX_MEMORY_FOR_DERIV":"4294967296"
+	  }
         },
         "deriv_generator": {
           "tags": {
             "Product": "Derivative Generation"
           },
-          "lambda_memory_size": 2048
+	  "environment_variables": {
+            "LAMBDA_MAX_MEMORY_FOR_DERIV":"4294967296"
+	  }
         },
         "pdf_generator": {
           "tags": {
             "Product": "PDF Generation"
           },
-          "lambda_memory_size": 4096
         }
       }
     }

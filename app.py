@@ -36,8 +36,8 @@ _4GB = 4294967296  # 4 gigabytes in bytes
 _2GB = 2147483648  # 2 gigabytes in bytes
 _1GB = 1073741824  # 1 gigabyte in bytes
 
-LAMBDA_MAX_MEMORY_FOR_PDF = getenv("LAMBDA_MAX_MEMORY_FOR_PDF", _4GB)
-LAMBDA_MAX_MEMORY_FOR_DERIV = getenv("LAMBDA_MAX_MEMORY_FOR_DERIV", _2GB)
+LAMBDA_MAX_MEMORY_FOR_PDF = int(getenv("LAMBDA_MAX_MEMORY_FOR_PDF", _4GB))
+LAMBDA_MAX_MEMORY_FOR_DERIV = int(getenv("LAMBDA_MAX_MEMORY_FOR_DERIV", _2GB))
 
 Image.MAX_IMAGE_PIXELS = None  # allow large images
 
