@@ -186,6 +186,8 @@ def _is_file_too_large(
     2 GB max_size with 30% buffer_ratio = 1.4 GB available
     """
     total_size = sum(file_sizes) if isinstance(file_sizes, tuple) else file_sizes
+    logger.warn(f"Total size of files: {total_size}, Max size: {max_size}, Buffer ratio: {buffer_ratio}")
+
     return max_size * (1 - buffer_ratio) - total_size < 0
 
 
@@ -291,7 +293,7 @@ def deriv_generator(event) -> None:
         try:
             resize_individual(bag, scale, image, location)
         except (NotFoundError, BadRequestError) as e:
-            logger.error(f"Failed to resize: {bag}, {image}")
+            logger.error(f"Failed to resize: {bag}, {image}. {e}")
         logger.debug(f"Resized: {bag}, {image} -> {scale}, {location}")
 
 
@@ -421,7 +423,7 @@ def resize_individual(
 
 @app.route("/resize/{bag}/{scale}")
 def resize(bag: str, scale: float) -> dict:
-    """API endpoint to resize images for specified bag"""
+    """API endpoint to queue resizing of images from specified bag"""
     deriv_queue = get_deriv_queue()
     logger.debug(f"Using queue: {deriv_queue}")
     logger.info(f"Processing {bag}")
@@ -431,7 +433,7 @@ def resize(bag: str, scale: float) -> dict:
         size = image_details.get("size")
         image_filename = image_details.get("file").split("/")[-1]
         if _is_file_too_large(size):
-            logger.error(f"{image_filename} from {bag} is too large to process!")
+            logger.error(f"{image_filename} from {location} is {size} bytes. Too large to process!")
         else:
             resp = deriv_queue.send_message(
                 MessageBody=dumps((bag, scale, image_filename, location))
