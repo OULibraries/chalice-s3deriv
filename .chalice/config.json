@@ -40,7 +40,7 @@
         "pdf_generator": {
           "tags": {
             "Product": "PDF Generation"
-          },
+          }
         }
       }
     }
